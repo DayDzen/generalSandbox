@@ -1,42 +1,21 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"log"
 
-	"gitoa.ru/go-4devs/translation"
-	"gitoa.ru/go-4devs/translation/arg"
-	"gitoa.ru/go-4devs/translation/icu"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
-	"golang.org/x/text/message/catalog"
 )
 
 func main() {
-	err := message.Set(language.Russian, "Hello {city}", catalog.String("Привет %s"))
-	if err != nil {
-		log.Fatal(err)
-	}
+	fmt.Println(transformToRub(1231231231231))
+	fmt.Println(transformToRub(123123.123123))
+	fmt.Println(transformToRub("12312312321"))
 
-	err = message.Set(language.Russian, "I{cost}", catalog.String("Это стоит %.2f."))
-	if err != nil {
-		log.Fatal(err)
-	}
+}
 
-	lang, err := language.Parse("ru")
-	if err != nil {
-		log.Fatal(err)
-	}
+func transformToRub(total interface{}) string {
+	tr := message.NewPrinter(language.Russian)
 
-	ctx := translation.WithLanguage(context.Background(), lang)
-
-	// tr := icu.Trans(ctx, "Hello {city}", translation.WithArgs("Москва"))
-	// fmt.Println(tr)
-	tr := icu.Trans(ctx, "It costs {cost}", translation.WithNumber("cost", 1000.00, arg.WithNumberFormat(arg.NumberFormatDecimal)))
-	fmt.Println("10000.2f")
-	fmt.Println(tr)
-	// Output:
-	// Привет Москва
-	// Это стоит 1 000,00.
+	return tr.Sprint(total)
 }
